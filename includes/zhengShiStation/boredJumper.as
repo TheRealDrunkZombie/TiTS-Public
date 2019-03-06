@@ -470,7 +470,8 @@ public function sweatBunHyperCockDock4(x:int):void
 			pc.ballSizeRaw += 0.25;
 		}
 	}
-	pc.applyBlueBalls();
+	if(!pc.hasStatusEffect("Blue Balls")) pc.createStatusEffect("Blue Balls", 0,0,0,0,false,"Icon_Sperm_Hearts", "Take 25% more lust damage in combat!", false, 0,0xB793C4);
+	pc.ballFullness >= 100;
 	output("\n\n");
 	IncrementFlag("JUMPER_DOCKED");
 	CombatManager.genericLoss();
@@ -866,8 +867,8 @@ public function bunslutPussFuck2():void
 	else output("both of your");
 	output(" cum. She pants and waves you away as her eyes drift shut. Deciding that she’s fine down there, you put your gear back on and head out, leaving her to fate.");
 	processTime(30);
-	pc.orgasm();
 	enemy.loadInCunt(pc,0);
+	pc.orgasm();
 	output("\n\n");
 	CombatManager.genericVictory();
 }
@@ -1199,7 +1200,12 @@ public function taursLoseToSweatLaquineByWsan():void
 	for(var y:int = 0; y < 5; y++)
 	{
 		pc.orgasm();
-		if(x >= 0) pc.loadInCunt(enemy,x);
+		if (x >= 0)
+		{
+			flags["BJUMPER_HEAT_SEX"] = 1;
+			flags["BJUMPER_TAUR_LOSS_SEX"] = 1;
+			pc.loadInCunt(enemy,x);
+		}
 		else pc.loadInAss(enemy);
 	}
 	sweatyDebuff(1);
@@ -2426,10 +2432,10 @@ public function boredJumperCowgirlWinByWilliamII():void
 		output(" so you decide to keep her with you for the next few minutes in a surprisingly relaxing break.");
 	}
 	processTime(30);
-	pc.orgasm();
 	output("\n\n");
-	enemy.loadInCunt(pc,x);
+	enemy.loadInCunt(pc,0);
 	if(y >= 0) enemy.loadInAss(pc);
+	pc.orgasm();
 	clearMenu();
 	addButton(0,"Next",boredJumperCowgirlWinByWilliamIII,y);
 }
@@ -2481,7 +2487,7 @@ public function heatSexLaquineJumper():void
 	if(!pc.inHeat())
 	{
 		output("\n\nAch, it’s fucking hot down here, and yet she looks just fine and dandy even in that sexy jumpsuit of hers. Wait... it’s hot... That’s it! You look into your bag and dig out a set of colorless pills - two very special capsules rest in your palm as you regard her with a devious mind. Before you continue, the question ‘why’ comes to mind, like your body or some foreign entity is telling you to <i>really</i> consider what you’re doing. Why <i>are</i> you thinking of this? Giving a lust-addled hermaphroditic laquine an extremely potent fertility pill and taking one yourself? You must be crazy. <b>Sex crazy.</b> Purposely inflicting breeding season on yourself and someone from a race of gifted breeders, what are they gonna say about you? Wait, who’s they?");
-		output("\n\nNever mind. Whatever doubts you have wash away with the next emerging layer of sweat as you tell her to get up and hold out her hand. Warmth and pheromones both pour from every part of your body as you simply imagine the mind-blowing sex to come. Just how will the both of you end up when all’s fucked and bred in this dark, miserably hot cave? This... Oh <i>this</i> oughta be fun.");
+		output("\n\nNevermind. Whatever doubts you have wash away with the next emerging layer of sweat as you tell her to get up and hold out her hand. Warmth and pheromones both pour from every part of your body as you simply imagine the mind-blowing sex to come. Just how will the both of you end up when all’s fucked and bred in this dark, miserably hot cave? This... Oh <i>this</i> oughta be fun.");
 		output("\n\nThe somewhat delirious rabbit eyes your madly blushing face curiously, then the pills in your [pc.hand], wondering what you’re up to. She says nothing, only able to guess at what lewd thoughts swim behind your [pc.eyes]. You take one pill between your thumb and finger and hold it out to her. Still confused, the stewing slut takes it, but seems... worried now.");
 
 		// PC Bimbo
@@ -2613,6 +2619,7 @@ public function boredJumperHeatSexIII():void
 	output("\n\nYou’re flipped onto your back, face to face with the lapine herm. She tears yanks her suit apart before picking you up off the ground. You soon find yourself pinned against the nearest wall. She spreads your legs by the thigh, leaning you forward a bit until her [enemy.cockHead] slips past your [pc.clit] Is she...? Oh no...");
 	processTime(30);
 	pc.orgasm();
+	flags["BJUMPER_HEAT_SEX"] = 1;
 	pc.loadInCunt(enemy,0);
 	clearMenu();
 	addButton(0,"Next",boredJumperHeatSexIV);
@@ -2665,15 +2672,21 @@ public function boredJumperHeatSexV():void
 		output(". The jumper rocks her hips back and forth, bending your rod like it’s a mere dildo.");
 
 		output("\n\nSeconds later, she rises up off your cum-covered cock and flops over to the side, tumbling down with the finesse of a frying pan. Thoroughly cooked by the heat she was subjected to, her heaving breaths soon normalize as she drifts off to sleep. You, too, are also tranquilized by the impact of primordial breeding.");
+		
+		flags["BJUMPER_HEAT_SEX"] = 1;
+		enemy.loadInCunt(pc, 0);
+		pc.orgasm();
 	}
 	processTime(4*60);
 	pc.loadInAss(enemy);
 	pc.loadInAss(enemy);
+	flags["BJUMPER_HEAT_SEX"] = 1;
 	pc.loadInCunt(enemy,0);
 	pc.loadInMouth(enemy);
 	pc.loadInMouth(enemy);
 	for(var y:int = 0; y < 8; y++)
 	{
+		flags["BJUMPER_HEAT_SEX"] = 1;
 		pc.loadInCunt(enemy,rand(pc.totalVaginas()));
 		pc.orgasm();
 	}

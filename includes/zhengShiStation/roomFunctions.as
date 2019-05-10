@@ -8,28 +8,6 @@ public function zhengCoordinatesUnlocked():Boolean
 	return (nyreaDungeonFinished() || (flags["KQ2_MYRELLION_STATE"] == 1 && MailManager.isEntryUnlocked("danemyrellioncoords")));
 }
 
-public function resetStepCounters():void
-{
-	//Mhenga
-	flags["JUNGLE_STEP"] = 0;
-	//Tarkus
-	flags["RUST_STEP"] = 0;
-	//Myrellion
-	flags["DEEP_CAVES_STEP"] = 0;
-	flags["NO_MANS_STEP"] = 0;
-	//Uveto
-	flags["TUNDRA_STEP"] = 0;
-	flags["UVETOCOAST_STEP"] = 0;
-	//Zheng
-	flags["ZS_MINE_STEP"] = 0;
-	flags["ZS_FOUNDRY_STEP"] = 0;
-
-	//NT
-	flags["FIELDS_STEP"] = 0;
-	//KQ
-	flags["KQ2_FIGHT_STEPS"] = 0;
-}
-
 public function zhengElevatorF1Bonus():void
 {
 	variableRoomUpdateCheck();
@@ -215,11 +193,21 @@ public function zhengFoundryF1EncounterBonus():Boolean
 		encounters.push(encounterPunkSecOp);
 		encounters.push(encounterPunkSecOp);
 		encounters.push(encounterPunkSecOp);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
 		if (ratsAvailable())
 		{
+			//encounters.push(ratsInTheMineEncounter);
 			encounters.push(ratsInTheMineEncounter);
 			encounters.push(ratsInTheMineEncounter);
-			encounters.push(ratsInTheMineEncounter);
+		}
+		if (snekAndMausHavingFun())
+		{
+			encounters.push(snekMausBonus);
+			encounters.push(snekMausBonus);
+			encounters.push(snekMausBonus);
+			encounters.push(snekMausBonus);
 		}
 		/*encounters.push(boredJumperAttackProc);
 		encounters.push(boredJumperAttackProc);*/
@@ -261,6 +249,14 @@ public function zhengFoundryF2EncounterBonus():Boolean
 		encounters.push(encounterPunkSecOp);
 		encounters.push(encounterPunkSecOp);
 		encounters.push(encounterPunkSecOp);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
+		encounters.push(coronaFlamerEncounter);
 		/*encounters.push(boredJumperAttackProc);
 		encounters.push(boredJumperAttackProc);*/
 		var pregScene:int = boredJumperPregScene();

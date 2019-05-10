@@ -50,8 +50,12 @@ public function showBlackjackDealer():void
 }
 public function showRoo():void
 {
-	showName("\nROO");
-	showBust("ROO_" + flags["ROO_STRIP_LEVEL"]);
+	showName(flags["MET_ROO"] != undefined ? "\nROO" : "\nBLACKJACK!");
+	showBust(rooBustDisplay());
+}
+public function rooBustDisplay():String
+{
+	return ("ROO_" + flags["ROO_STRIP_LEVEL"]);
 }
 public function roogasm():void
 {
@@ -87,12 +91,23 @@ public function blackjackTest():void
 
 public function blackjackTie():void
 {
+	clearOutput();
+	showBlackjackDealer();
+	
 	if(flags["BLACKJACK_DEALER"] == 1)
 	{
-		clearOutput();
-		showRoo();
 		output("<i>“Another hand then?”</i> the bunny-cat smiles with apparent delight at the thought of playing with you again.");
 		rooMenu();
+	}
+	else
+	{
+		output("Well, what are the chances?\n\nThe dealer prepares another hand. Do you play again?");
+		flags["BLACKJACK_DEALER_SHOWN"] = undefined;
+		flags["BLACKJACK_BET"] = 0;
+		flags["BLACKJACK_STANDING"] = undefined;
+		clearMenu();
+		addButton(0,"Play Again",startBlackjack,true);
+		addButton(14,"Leave",blackjackCleanup);
 	}
 }
 
@@ -396,7 +411,7 @@ public function blackJackOptions(args:Array):void
 		if(debug) addButton(2,"Win",winAtBlackjack,[deck,dealerHand,pcHand],"Stand","Keep your current cards for now.");
 		
 		//if(pcHand.getCardPointTotalBlackjack() >= 21) addButton(2,(flags["BLACKJACK_BET"] > 0 ? "Bet More":"Bet"),blackJackBettingScreen,[deck,dealerHand,pcHand]);
-		//else addDisabledButton(2,"Bet","Bet","It's too late in the game for more betting.");
+		//else addDisabledButton(2,"Bet","Bet","It’s too late in the game for more betting.");
 	}
 }
 public function winAtBlackjack(args:Array):void
@@ -562,17 +577,17 @@ public function rooBonus(button:Number = 0):void
 		}
 		if(flags["ROO_ON_CD"] == 1) addDisabledButton(button,"Roo","Roo","After her climax, Roo is off duty for the day.");
 		else if(flags["MET_ROO"] == undefined) addButton(button,"Bunny Dealer",approachRoo,undefined,"Bunny Dealer","Grab a seat at the table and consider striking up a game with the bunny-eared dealer!");
-		else if(pc.credits < 500) addDisabledButton(button,"Roo","Roo","You don't have any money. There's no reason to annoy anybody by sitting at a game you can't afford to play.");
+		else if(pc.credits < 500) addDisabledButton(button,"Roo","Roo","You don’t have any money. There’s no reason to annoy anybody by sitting at a game you can’t afford to play.");
 		else addButton(button,"Roo",approachRoo,undefined,"Roo","Sidle up to the blackjack table and have a go with Roo again!");
 	}
 	else
 	{
 		if(flags["MET_ROO"] != undefined) 
 		{
-			output("\n\nRoo isn't working her usual table right now. Maybe you should check back after noon?");
-			addDisabledButton(0,"Roo","Roo","This blackjack table isn't currently open for business.");
+			output("\n\nRoo isn’t working her usual table right now. Maybe you should check back after noon?");
+			addDisabledButton(0,"Roo","Roo","This blackjack table isn’t currently open for business.");
 		}
-		else addDisabledButton(0,"Bunny Dealer","Bunny Dealer","This blackjack table isn't currently open for business.");
+		else addDisabledButton(0,"Bunny Dealer","Bunny Dealer","This blackjack table isn’t currently open for business.");
 	}
 }
 
@@ -598,7 +613,7 @@ public function approachRoo():void
 		output("\n\nAs the bouncer explained, credits are to be presented up front... though you don’t quite know how to do that. At least until you look at what everyone else has done. Devices similar to your codex or plain chits have been slotted into ports on the table, their displayed balances increasing or decreasing with success or failure.");
 		output("\n\nIn the seconds it took for you to make that discovery, another round has just played out. Roo sings praises and wishes the losers a shift in fortune. You pull out a loaded credit chit and glance at the cat-tailed dealer- wait, cat tails? So she’s a kaithrit then! That explains the feline’s fancy moves!");
 		output("\n\n<i>“Ah, first time in Treasure Nova?”</i> the genial kitty-rabbit perks up again, sensing your confusion. <i>“The rules are pretty simple if I says so myself!”</i> she flicks out one card to each player in a mere second. <i>“Just plug in your money, tell me your bet, and we’ll start playing! No forfeits, though! Hopefully Colis or Alphonse told you that.”</i> Another card swicks. <i>“Minimum bets are 500 credits, maximum bets 5000,”</i> another, <i>“and if you win a lot, <b>you’ll start earning some super special VIP prizes!</b>”</i> The deep heat in her tone raises an eyebrow. <i>“Haven’t had to give out any lately believe it or not! Luck’s just not been on anyone’s side, sadly...”</i>");
-		output("\n\n'<i>Swick.</i>'' <i>“But that’s all there is to it!”</i> she announces gaily, flattening an upright card next to her face-down ‘hole’ card with avid diligence. Deck still in hand, her apple cat’s eyes are centered on you. <i>“Shall we play?”</i>");
+		output("\n\n‘<i>Swick.</i>’ <i>“But that’s all there is to it!”</i> she announces gaily, flattening an upright card next to her face-down ‘hole’ card with avid diligence. Deck still in hand, her apple cat’s eyes are centered on you. <i>“Shall we play?”</i>");
 		processTime(5);
 	}
 	// Repeat Time
@@ -844,8 +859,8 @@ public function pcWinsVsRoocipher():void
 		{
 			output("Another successful bout and your heart skips a beat. Another of your fellow players departs the table, your balance increases thanks to smart choice-making... and Roo stands again, taking one step back. <i>“Awesome work, [pc.name]!”</i> she grins. <i>“You’re a natural!”</i> Her thumbs wiggle past the wrap of her skirt, pulling the loop of cloth from her squishy hips.");
 			output("\n\nThe kaithrit’s slender fingers dig through the hugging hem of her skirt in meticulous fashion, the lengths of her gemini tails racing circuits around her body. Roo’s candied thighs wiggle to and fro, tentative and sensual yet quick enough you don’t see the pleated garment’s buttons unclick, spilling her voluptuousness into plain view.");
-			output("\n\n<i>“Ready or not!”</i> she giggles, flinging her skirt directly at your face with enough speed and surprise you can’t catch it. Your nose is struck by the residual pheromones hidden behind behind her satiny red panties, and now she looks less a dealer and more like a frat girl partying in the dorm.");
-			output("\n\nHer hips aggressively cock and the springy plushness they’ve accumulated quivers attractively. More freckles can be seen around her flawless waistline, deepening in presence towards her ass - sadly, you don’t see much behind her underwear. Her shoulders roll, and her chest bounces in rhythm; she seats herself, hurriedly shuffling the deck after that blithe and brazen conduct. <i>“You’re on a roll, [pc.name]!”</i>");
+			output("\n\n<i>“Ready or not!”</i> she giggles, flinging her skirt directly at your face with enough speed and surprise you can’t catch it. Your nose is struck by the residual pheromones hidden behind her satiny red panties, and now she looks less a dealer and more like a frat girl partying in the dorm.");
+			output("\n\nHer hips aggressively cock and the springy plushness they’ve accumulated quivers attractively. More freckles can be seen around her flawless waistline, deepening in presence towards her ass. Her shoulders roll, and her chest bounces in rhythm; she seats herself, hurriedly shuffling the deck after that blithe and brazen conduct. <i>“You’re on a roll, [pc.name]!”</i>");
 			output("\n\nFlirtatious as ever, she asks, <i>“Will it stay that way?”</i>");
 		}
 		// Repeat (lewdness minimum <=3 gamegasms)
@@ -1036,7 +1051,7 @@ public function pcWinsVsRoocipher():void
 			output("\n\nHer abdominals ripple with the strongest effect of whatever’s smashing her brain to pieces. The mechanical grumble of a motor can be faintly heard at her opened labia, where many thin strings travel. The second her vibrators kicked on, she didn’t just gush, she began to <i>flood.</i>");
 			output("\n\nRoo’s pink netherlips visibly part, launching out shots of scent-rich girlcum, steadily reducing to a mound-slickening river that puddles heavily around her. It’s the equivalent of wringing someone like a rag. The frequency of her sex toys is not consistent, and you can grok that from the random spasms that flex through her like lightning.");
 			output("\n\nThe cajoling continues as Roo very literally cums her brains out, discoloring the floor and the table with her pheromonally-charged juices. She’s being harvested for all she’s worth. The groomed fur on her legs begins to mat down and plaster to her like a gross sleeve. Camera flashes from numerous devices record every titillating detail of her thrashing orgasm. Despite this, the kaithrit slut lazily gropes and massages her tits, whimpering slow, sibilant hums of feminine bliss, a prisoner in her own helplessly climaxing body.");
-			output("\n\nWiping her arm across her jaw, Roo stains her fur with drool. Although the strongest effect has passed, you can still hear the low mechanical hum from where you sit. You collect your winnings, # credits richer, and realize this is what it’s like to hit jackpot in <i>Treasure Nova.</i>");
+			output("\n\nWiping her arm across her jaw, Roo stains her fur with drool. Although the strongest effect has passed, you can still hear the low mechanical hum from where you sit. You collect your winnings, several credits richer, and realize this is what it’s like to hit jackpot in <i>Treasure Nova.</i>");
 			output("\n\n<i>“O-O-Oh, it’s been a long time,”</i> Roo giggles, tongue lolling. She lazily glances across to you, eyes crossed in forced bliss. Her chest was already sensitive, but the way she cups it makes her moan openly.");
 			if(pc.hasCock()) output(" [pc.EachCock] " + (!pc.isCrotchExposed() ? "struggles mightily against your covered crotch":"rockets to attention, beading a [pc.cumColor] dollop of pre") + " in want for the vulnerable kaithrit in front of you.");
 			if(pc.hasVagina()) output(" Your [pc.pussiesLight] tingle" + (!pc.hasVaginas() ? "s":"") + " receptively, your loins clearly wishing to experience what the bunny-cat just did.");
@@ -1269,7 +1284,7 @@ public function rooPantyCollectScene(arg:String = "back"):void
 	clearOutput();
 	showRoo();
 	author("William");
-	if(arg == "tableFukk") output("\n\n<i>“That’s good,”</i> she nods, <i>“because I have something I need to tell you, and something else I wish for you to have.”</i> Roo strides around the table and back, collecting something you can’t see. She hides it behind her back coyly.");
+	if(arg == "tableFukk") output("<i>“That’s good,”</i> she nods, <i>“because I have something I need to tell you, and something else I wish for you to have.”</i> Roo strides around the table and back, collecting something you can’t see. She hides it behind her back coyly.");
 	else if(arg == "notBack") output("<i>“Ah, [pc.name], this reminds me!”</i> she chirps, launching deftly to her feet. <i>“There’s something I want you to have, and something I wish to tell you.”</i> She maneuvers around the table to collect something, but you can’t see what - it’s hidden behind her back.");
 	else output("You tell Roo you’re not in need of service, and she nods. Instead of giving you a spiel, instead of heading off like she usually does, she takes this precious one-on-one time to maneuver around the table and grab something. She holds it behind her back as she approaches you again. <i>“[pc.name], there’s something I want you to have, and something I want to say.”</i>");
 	output("\n\nA degree of worry builds inside, but you wait patiently for her to continue. <i>“You asked me how I came to be here. I can’t answer that.”</i> She kneels down in front of you, a dour smile cresting her features. <i>“But I want you to know that I am not unhappy, that I don’t begrudge any of this. Especially not after meeting you.”</i>");
@@ -1287,7 +1302,7 @@ public function rooPantyCollectScene(arg:String = "back"):void
 	output("...");
 	//Satiny, bright red panties with ribbony side-ties.
 
-	pc.createKeyItem("Panties - Roo's - Satiny, bright red panties with ribbony side-ties.")
+	pc.createKeyItem("Panties - Roo's - Satiny, bright red panties with ribbony side-ties.");
  	output("\n\n(<b>Gained Key Item: Panties - Roo’s</b>.)");
  	clearMenu();
  	addButton(0,"Next",mainGameMenu);
@@ -1303,18 +1318,18 @@ public function rooAppearance():void
 	author("William");
 	output("You shake your head, deciding to sit out a few games. Roo accepts the answer. In fact, she does so with poised alacrity, positioning herself in a way that helps you accomplish your goal! Guess she knows where <i>your</i> eyes are." + (flags["ROO_STRIP_LEVEL"] >= 4 ? " With her body totally exposed, she takes greater pleasure in your intense analysis, cheeks blooming from ocular stimulation.":""));
 	output("\n\nTreasure Nova’s sunniest employee is a light-skinned kaithrit who’s replaced her fluffy ears with those of a lop bunny’s. They dangle inflexibly from her head of pristine white and curly hair, beautifully styled and maintained to maximize charm and refinement. Two cherry red eyes with vertical pupils sit like gems in the crown of her lovably freckled face, and her full red lips widen easily into merry smiles below her cute button nose, creasing her squeezable cheeks.");
-	output("\n\nFrom the neck down Roo’s body expands into a femininity lithe at its core and silky-plush at its curves - she’s a bombshell, and her features are positively enhanced by the skanky uniform she wears! ");
+	output("\n\nFrom the neck down Roo’s body expands into a femininity lithe at its core and silky-plush at its curves - she’s a bombshell, and her features are positively enhanced by the skanky uniform she wears!");
 	if(flags["ROO_STRIP_LEVEL"] < 3)
 	{
-		if(flags["ROO_STRIP_LEVEL"] == 0) output("Beneath her buttoned jacket and the nametag it bears");
-		else if(flags["ROO_STRIP_LEVEL"] == 1) output("Beneath her breezy shirt");
+		if(flags["ROO_STRIP_LEVEL"] == 0) output(" Beneath her buttoned jacket and the nametag it bears");
+		else if(flags["ROO_STRIP_LEVEL"] == 1) output(" Beneath her breezy shirt");
 		output(" are a perky pair of EE-cup boobs, nipples erect and showing plainly through the fabric.");
 		if(flags["ROO_HIGHEST_STRIP_LEVEL"] >= 3) output(" You couldn’t guess as to their color, though.");
-		else output("You know that they’re a delicious pink in color.");
+		else output(" You know that they’re a delicious pink in color.");
 	}
 	else
 	{
-		output("With her clothing discarded by repeat defeat, Roo’s creamy flesh is laid bare, and her captivating EE-cups, capped by bliss-fattened pink nipples, wobble in trance-inducing patterns.");
+		output(" With her clothing discarded by repeat defeat, Roo’s creamy flesh is laid bare, and her captivating EE-cups, capped by bliss-fattened pink nipples, wobble in trance-inducing patterns.");
 	}
 	output(" Starting at her biceps, an argent sleeve of groomed fur coats her arms to the fingertips, ending with blunted claws.");
 	output("\n\nAfter dealing another hand, she flashes you a cheshire smile that puts her cat-like fangs on display. Her tongue clicks, her eye gives that cute wink, and she’s back to it. The tease...");
@@ -1388,12 +1403,12 @@ public function rooTalkMenu():void
 	addButton(0,"Herself",rooHerselfTalkies,undefined,"Herself","Is there anything she can tell you about herself?");
 	//[Her Job]
 	// Must ask about [Herself] five times; gray out otherwise
-	if(flags["ROO_SELFTALKED_TOTAL"] == undefined || (flags["ROO_SELFTALKED_TOTAL"] != undefined && flags["ROO_SELFTALKED_TOTAL"] < 50)) addDisabledButton(1,"Her Job","Her Job","You should get to know her a bit more. As well as you can, anyway.");
+	if(flags["ROO_SELFTALKED_TOTAL"] == undefined || flags["ROO_SELFTALKED_TOTAL"] < 5) addDisabledButton(1,"Her Job","Her Job","You should get to know her a bit more. As well as you can, anyway.");
 	else addButton(1,"Her Job",rooHerJobbieTalk,undefined,"Her Job","Ask about her job and why she does it.");
 	//[Treasure Nova]
 	addButton(2,"Treas.Nova",rooTalksTreasureNova,undefined,"Treasure Nova","How’d she end up here, and what’s this place like?");
 	//[Boss]
-	if(flags["ROO_NOVA_TALK"] == undefined) addDisabledButton(3,"???","???","You'll need to talk about something else first.");
+	if(flags["ROO_NOVA_TALK"] == undefined) addDisabledButton(3,"???","???","You’ll need to talk about something else first.");
 	else addButton(3,"Her Boss",askRooAboutHerBoss,undefined,"Her Boss","Ask about her boss.");
 	//[Fetish]
 	// Tooltip: Ask about her love for exhibition.
@@ -1650,7 +1665,7 @@ public function rooSexMenu(display:Boolean = true):void
 	{
 		clearOutput();
 		showRoo();
-		output("Roo's down for fun, but what do you want to do with her?");
+		output("Roo’s down for fun, but what do you want to do with her?");
 	}
 	clearMenu();
 	//[Undertable Oral]
@@ -1864,7 +1879,9 @@ public function rooBeej2(x:int):void
 	output(" pole. She looks into your straining eyes, watching you twist in pleasure as inch after [pc.cockColor " + x + "]-hued inch disappears into her indulgent maw. Your impatient shuffles accelerate your holstering.");
 	output("\n\nHer entire body gets off on being orally claimed, clenching and squirming with a desire to be debased, to be little more than a slut spitted on the cock of her favorite [pc.raceShort]. If you thought her lips were amazing before, having them wrapped passionately around your penis is maddening. They’re impossibly soft - the top and the bottom have their own unique, sensual texture that nearly releases your pressurizing loads.");
 	output("\n\nBut as you stare into her eyes, you manage to hold back again, denying yourself that delicious moment of creampieing that moist pocket for a while longer. The buxom kaithrit plies you with her velveteen tongue, swirling it around the " + (pc.cocks[x].cLength() < 7 ? "heavy":"massive") + ", lubricated thickness bracing a jaw " + (pc.cocks[x].cLength() < 7 ? "well-suited for sucking dicks like yours":"not suited for sucking dicks this large") + ". Her hands steady themselves on your [pc.thighs] as she moves to take you to her throat, continuing your sopping wet journey through hollowed cheeks and sauna-like terrain.");
-	output("\n\nNeedy whimpers float from your lips as her pussy-tight uvula hugs the " + (pc.cocks[x].hasFlag(GLOBAL.FLAG_FLARED) ? "flare":"ballooning tip") + " of your pulsating cock. Preseed plummets into her accommodating belly, squirting hard. She inhales through her nose and takes you down");
+	output("\n\nNeedy whimpers float from your lips as her");
+	//output(" pussy-tight");
+	output(" uvula hugs against the " + (pc.cocks[x].hasFlag(GLOBAL.FLAG_FLARED) ? "flare":"ballooning tip") + " of your pulsating cock. Preseed plummets into her accommodating belly, squirting hard. She inhales through her nose and takes you down");
 	if(pc.cocks[x].cLength() > 16) output("; although she couldn’t hope to take you all the way, you mentally thank her for the effort all the same");
 	output(". Fatter globs of dick-drool widen your cumvein and stretch her open with greater amounts of liquid offering, upsetting her careful throat-threading.");
 	output("\n\n");
@@ -1931,6 +1948,7 @@ public function rooBeej2(x:int):void
 	// Merge
 	if(pc.cumQ() < 6000) output("\n\nRoo slides off your cock with a wet pop.");
 	else output("\n\nRoo sputters and wipes her windshield with both arms, panting dryly.");
+	if (pc.cumType == GLOBAL.FLUID_TYPE_CHOCOLATE_CUM) output(" She slurps up the dregs of your still-warm release, puffing out her cheeks with seed-filled chocolate. The kitty cums again, moaning in confectionery delight. She gulps the hot, melty, creamy dark nut down, cumming <i>again,</i> looking extremely well fed.");
 	output(" <i>“M-My... [pc.name]... that was delicious,”</i> she grins, patting her belly.");
 	output("\n\nSatisfied eyes gaze longingly at your receding [pc.cocksLight]" + (pc.balls > 0 ? " and your diminished [pc.ballsNoun]":"") + "; she passes the seconds catching her breath and savoring the warmth you emptied into ");
 	if(pc.cumQ() >= 6000) output("and onto ");
@@ -2007,8 +2025,8 @@ public function underTableRooEatsPuss(x:int = 0):void
 	output("\n\n");
 	showImage("RooUnderTableLick");
 	output("Those bright, velvety lips of hers...");
-	if(flags["ROO_CUNNILINGED"] == undefined) output("if you thought they felt amazing at any other point, you weren’t ready for feeling them where it matters most");
-	else output("you’re never prepared for their inhuman suppleness You’re not sure if kaithrits have better lips than most, or if hers are modded, but their contact is greater than any finger or cock");
+	if(flags["ROO_CUNNILINGED"] == undefined) output(" if you thought they felt amazing at any other point, you weren’t ready for feeling them where it matters most");
+	else output(" you’re never prepared for their inhuman suppleness You’re not sure if kaithrits have better lips than most, or if hers are modded, but their contact is greater than any finger or cock");
 	output(". Her tongue is barely felt for their exquisite plushness. Roo’s carmine cushions seem to have two different luxurious textures spread out among upper and lower lip, and all you can do is quiver nervelessly, somehow made so sensitive to those sparkling pleasure-pillows.");
 	// PC dicksize clit
 	if(pc.clitLength > 3.5) output("\n\n<i>“Aww, this is kind of adorable, actually!”</i> she laughs, pursing her amazingly soft lips into a small, clit-hugging ‘O’. The cunt-kissing kaithrit inhales your unnatural length of clitoral flesh, swishing her tongue to the underside of nerves never meant to grow into a full-on pole. While she dances orally at your hypersexed muscle, a dizzying pressure nearly overwhelms you with raw, riotous sensations. You hurriedly grab her head and pull her off before it becomes too much, and she thankfully abates.");
@@ -2019,9 +2037,10 @@ public function underTableRooEatsPuss(x:int = 0):void
 	if(pc.libido() < 33) output("You would probably go insane if she up and left you alone, alone yet surrounded, crying out for help.");
 	else output("If she left you alone now, you wouldn’t think twice about hopping on any number of the able dicks in this room, draining their balls into your womb. There’s a mouse-eared character watching fervidly. In his eyes, you plainly see capability and want.");
 	output("\n\nFluffy tails tightening blissfully, Roo wiggles her nose into [pc.onePussy], tongue slipping past your wet, unfurling slopes. <i>“Mmmm,”</i> Roo moans, widening your most sensitive place, shocking your system with another ambrosial harvest. Elegant fingers tenderly massage your skin, opening your " + (pc.elasticity < 2 ? "inflexible":"elastic") + " hole up to further inspection. The slowness at which she handles you is masterful, and it brings you to a new level of wetness, something her narrowed eyes greatly approve of.");
-	output("\n\nLurching forward, [pc.thighs] clenching, ");
-	if(!pc.isTaur()) output("you grab Roo by the ears and hold tight /taur: shift all your weight onto Roo’s face, ");
-	output("hyperventilating on the edge of a tectonic orgasm. The slut-cat whimpers but doesn’t resist, clearly enjoying a little rough treatment. You decide to set the pace, unwilling to be little more than a [pc.raceShort] cumming like crazy, helpless to those expansive, heavenly... lips...");
+	output("\n\nLurching forward, [pc.thighs] clenching, you");
+	if(!pc.isTaur()) output(" grab Roo by the ears and hold tight");
+	else output(" shift all your weight onto Roo’s face");
+	output(", hyperventilating on the edge of a tectonic orgasm. The slut-cat whimpers but doesn’t resist, clearly enjoying a little rough treatment. You decide to set the pace, unwilling to be little more than a [pc.raceShort] cumming like crazy, helpless to those expansive, heavenly... lips...");
 	output("\n\nOh right...");
 	output("\n\nBefore Roo gets any ideas you seat her drooling and cum-splattered face deeper into your bliss-imbued [pc.pussyNoun " + x + "]. Your [pc.hips] rock against her head, taking pleasure directly from her. She obliges, allowing you to use her like a lop-eared dildo, suckling firmly on your labia and worshiping your clit with lurid, squelching echoes. The kitty-rabbit has yet to lose herself to wantonness: she just purrs away, faintly squeaking while filling you to capacity with tongue and lip.");
 	// PC gryvain pussy
@@ -2062,8 +2081,8 @@ public function underTableRooEatsPuss(x:int = 0):void
 	// PC squirter
 	else 
 	{
-		output("\n\nYour eyes water and your [pc.pussieslight] are spread, bent, strained by the thirsty kaithrit. When orgasm crashes upwards through your system you unconsciously flex out lances of [pc.girlCum] that shatter upon Roo’s face and fervently flushes across the casino floor. She stretches you to the breaking point, working out your cataclysmic release in thunderously erotic increments. All of her efforts were devoted to <i>that</i> spot inside you, knowing exactly the area that made you howl spectacularly on the plateau.");
-		output("\n\nYou moan, you curse, and moan some more before relaxing into sighs and mewls of susceptibility. [pc.EachPussyIsAre] vibrating with untold amounts of pleasure, brought to a brilliant pinpoint where even the slightest kiss of wind could make you repeat that all over. In the aftermath, a glittering, [pc.girlCumGem] puddle spreads out from where you and Roo sit. It’s a mixture of your combined fluids like an atmosphere.");
+		output("\n\nYour eyes water and your [pc.pussiesLight] are spread, bent, strained by the thirsty kaithrit. When orgasm crashes upwards through your system you unconsciously flex out lances of [pc.girlCum] that shatter upon Roo’s face and fervently flushes across the casino floor. She stretches you to the breaking point, working out your cataclysmic release in thunderously erotic increments. All of her efforts were devoted to <i>that</i> spot inside you, knowing exactly the area that made you howl spectacularly on the plateau.");
+		output("\n\nYou moan, you curse, and moan some more before relaxing into sighs and mewls of susceptibility. Your [pc.pussiesIsAre] vibrating with untold amounts of pleasure, brought to a brilliant pinpoint where even the slightest kiss of wind could make you repeat that all over. In the aftermath, a glittering, [pc.girlCumGem] puddle spreads out from where you and Roo sit. It’s a mixture of your combined fluids like an atmosphere.");
 	}
 	// Merge
 	if(pc.hasCock()) output("\n\nYour dick-gasm wasn’t anywhere near as exciting, and indeed wasn’t noticed. The only evidence your [pc.cocksLight] had any fun is the dregs of [pc.cum] in the kaithrit’s hair.");
@@ -2111,7 +2130,7 @@ public function tableFuckRoo():void
 	clearOutput();
 	showRoo();
 	author("William");
-	// Special Start:  6+ Gamegasms, Roo takes a milky drug (one-time only blurb)
+	// Special Start: 6+ Gamegasms, Roo takes a milky drug (one-time only blurb)
 	if(flags["ROO_GASMED"] >= 6 && flags["ROO_MILKED"] == undefined)
 	{
 		clearOutput();
@@ -2128,6 +2147,7 @@ public function tableFuckRoo():void
 		pc.lust(3);
 		clearMenu();
 		addButton(0,"Next",rooTableFuck,true);
+		return;
 	}
 	// Roo Gamegasms 4-9
 	if(flags["ROO_GASMED"] < 10)
@@ -2204,7 +2224,7 @@ public function noMilkNowRoocipher():void
 }
 
 // Merge
-public function rooTableFuck(milky:Boolean):void
+public function rooTableFuck(milky:Boolean = false):void
 {
 	clearOutput();
 	showRoo();
@@ -2219,7 +2239,9 @@ public function rooTableFuck(milky:Boolean):void
 		output("\n\nOnce you’re positioned for her needs, Roo divests you of your [pc.chestCovers] one piece at a time" + (pc.biggestTitSize() >= 1 ? ", exposing your [pc.breasts] for her own enjoyment":"") + ".");
 	}
 	else output("\n\nNow that you’re straddling her, her hands roam over your body" + (pc.biggestTitSize() >= 1 ? ", playing with your [pc.breasts] by pawing playfully at a [pc.nippleNoun]":"") + ".");
-	output("\n\nThe second your [pc.fingers] touch down on her " + (!milky ? "plump, well-rounded":"swollen, jiggly") + " tits you don’t want to ever let go. <i>“My nipples, too!”</i> she grins, pinching one and moaning. You can’t resist thrusting your [pc.face] into her cleavage, an incredible feeling of satisfaction washing over you from scalp to belly. She moves quickly to stroke your head{, threading [pc.hairColor] hair between her fingers, tousling [pc.hairs] and pulling in reminder of your purpose}. <i>“[pc.name], you can’t rest yet!”</i>");
+	output("\n\nThe second your [pc.fingers] touch down on her " + (!milky ? "plump, well-rounded":"swollen, jiggly") + " tits you don’t want to ever let go. <i>“My nipples, too!”</i> she grins, pinching one and moaning. You can’t resist thrusting your [pc.face] into her cleavage, an incredible feeling of satisfaction washing over you from scalp to belly. She moves quickly to stroke your head");
+	if(pc.hasHair() && pc.hairLength >= 3) output(", threading [pc.hairColor] [pc.hairNoun] between her fingers, tousling [pc.hairs] and pulling in reminder of your purpose");
+	output(". <i>“[pc.name], you can’t rest yet!”</i>");
 	output("\n\nYou reluctantly rise, mouth curling into a goofy smile. Caressing then squeezing, you marvel at how her boobs shake and overflow from inadequately sized palms that are better served clapping those puppies together. " + (milky ? "Doing so unleashes the pressure behind her teats, and broad, glistening arcs of milk shoot into the air and land messily on her, to be rubbed in by whoever’s hand gets there first.":"") + " Roo’s lips part and her jaw slackens; her slitted eyes shine with boobie-based bliss. Birdsong coos drift from her satin-red lips. The moments when her brain soft-locks are visible in her twitching irises, always glimmering when hit with short, sharp spikes of nipple-bound lust.");
 	output("\n\nShe was warm already, but you swear she’s getting hotter. Before your restraint totally vanishes, you massage her pert melons with inspiring rubs, swirling one hand clockwise and the other counter" + (milky ? ", puddling milk into her valley, abusing her nipples until she’s a milky momma shining in her own wetness":"") + ". Silky flesh bounces in your grasp; you’re feeling for her thick heartbeats, and holding your breath when she gasps for air, quivering beautifully underneath.");
 	output("\n\nPanting madly, you grab lady luck by her tits and smush them together, letting your fingers sink into dreamy fields of kaithrit bosom. " + (milky ? "Thin white arcs squirt upwards, sprinkling your cheek only to drip back down. Palmfuls of kitty-cream slough on the table in steadily increasing amounts. ":"") + "The sensitive kitten gladly moans, but in her hyper-aroused state it’s a much throatier purr than you’ve heard. She’s not a simple cat, but a ripe lioness waiting to be claimed. The sound inspires an animal reaction, and you knead hard enough to hurt" + (milky ? ", soaking your [pc.hands] in the alabaster droplets trickling over them":"") + ".");
@@ -2265,10 +2287,10 @@ public function rooTableFuck2(milky:Boolean = false):void
 	else output("Your cock is big enough to make others wish theirs was so... so large and powerful. Please be careful with me, okay?");
 	output("”</i>");
 	output("\n\nSliding back across her vanilla tummy, you rock your [pc.hips] and plant your [pc.cockHeadBiggest " + x + "] to her lust-slick tunnel. Taking a deep breath, you apply weight to your lower half and push in as you exhale. Your crown slips past the fattened entrance easily, already beginning to stretch her pliant and moldable muff. The dealer grabs both of her boobs, happily squealing the more [pc.dickSkin " + x + "] sinks into her pressurized depths.");
-	output("\n\nSeeping streams of honey drool over and under your most sensitive skin, agitating your passions, imbuing the desire to skewer her on your veiny girth. Roo gasps, shuddering nervelessly, voice rising in an orgasm that begins where your motions are finally arrested in her vibed-up pussy. ");
+	output("\n\nSeeping streams of kaithrit honey drool over and under your most sensitive skin, agitating your passions, imbuing the desire to skewer her on your veiny girth. Roo gasps, shuddering nervelessly, voice rising in an orgasm that begins where your motions are finally arrested in her vibed-up pussy. ");
 	if(pc.cocks[x].cLength() < 7) output("You’re [pc.knotBallsHilt " + x + "]-deep in the clenching cat’s spread lips, and her glorious pussy is clutching super tight, almost painfully so. Were you any bigger, it might hurt!");
 	else if(pc.cocks[x].cLength() < 13) output("You nearly make it all the way, but her painfully tight clenching stops you. All it takes is an insistently firm thrust, and you socket her feminine folds with the rest up to the [pc.knotOrSheath " + x + "]. At her navel you can see the outline of your [pc.cockHead " + x + "], which just tapped her cervix.");
-	else output("Your too-big size spears her in more ways than one. Your sheer width and length strains her body far wider than it was meant to be taken, and several [pc.cockColor " + x + "] inches are left out never to be welcomed" + (pc.cocks[x].cType == GLOBAL.TYPE_EQUINE ? ", including your medial ring":"especially your [pc.knotOrSheath " + x + "]") + ".");
+	else output("Your too-big size spears her in more ways than one. Your sheer width and length strains her body far wider than it was meant to be taken, and several [pc.cockColor " + x + "] inches are left out never to be welcomed, " + (pc.cocks[x].cType == GLOBAL.TYPE_EQUINE ? "including your medial ring":"especially your [pc.knotOrSheath " + x + "]") + ".");
 	output("\n\n");
 	if(milky) showImage("RooTableFuckMilk");
 	else showImage("RooTableFuck");
@@ -2279,7 +2301,7 @@ public function rooTableFuck2(milky:Boolean = false):void
 	output("\n\nThough your [pc.cock " + x + "] is swimming in a bucket’s worth of lubricant her restraining hole holds tight like it’s slowly melded to you and you’re not fucking it, but fucking the entire body it’s part of. For a second that seems to be true, considering every spastic jerk throws Roo up and down. You’re not sure if she’s wriggling to purposefully push you back in when you manage to unholster even a few inches, but it’s not helping your case!");
 	output("\n\nYet, despite the firmness of her her cock-curtaining cunt, you do manage to fuck her addled tunnel with mindless relish. You’re not really sliding in or out, but squeezing your hips against one another in what must be a feral, depraved show to others. You decide, after your knuckles have gone white from " + (!pc.isTaur() ? "gripping so tight to her thighs":"to an imagined handhold") + ", that she’s just been cumming this entire time... that her rigged-up pussy has been oversensitized by a lifetime of obligated debauchery.");
 	output("\n\nInstead of working against the pain and focusing on it, you push it out with a monumental effort. At last you open your eyes, fully adjusted to the bulge-strangling vice of her sweltering channel. A little more blood makes it to your slut-taming " + (pc.cocks[x].cLength() < 12 ? "shaft":"pillar") + ", restoring some semblance of control and feeling. You can hear the squelches of her lurid cunt, feel the wave-like motions of her unrelaxed interior grabbing hold, fighting to pull you back in and drain you of your load.");
-	output("\n\nRoo’s legs " + (pc.isTaur() ? "firm themselves to your flanks":"lock around your waist") + " as possessive as her tails, undergirding the inward thrusts " + (pc.cocks[x].cLength() < 7 ? "that lunge close to ":"that bounce off ") + "her womb. The backstrokes have become a little easier. So much orgasmic honey gathers inside that it backblasts when enough vacant space is available, splashing your [pc.knotBallsHilt " + x + "] in heady liquid.");
+	output("\n\nRoo’s legs " + (pc.isTaur() ? "firm themselves to your flanks":"lock around your waist") + " as possessive as her tails, undergirding the inward thrusts " + (pc.cocks[x].cLength() < 7 ? "that lunge close to ":"that bounce off ") + "her womb. The backstrokes have become a little easier. A volume of femme cum gathers inside, so great and packed in that it backblasts when enough vacant space is available, splashing your [pc.knotBallsHilt] in the heady liquid of a cabbit cock-socket.");
 	// PC feline or barbed cock
 	if(pc.cocks[x].hasFlag(GLOBAL.FLAG_NUBBY) || pc.cocks[x].cType == GLOBAL.TYPE_FELINE)
 	{
@@ -2377,7 +2399,7 @@ public function rooTableFukkEpi(milky:Boolean = false):void
 	{
 		output("\n\n<i>“Well, we better clear out,”</i> she explains, surprisingly lucid and perky, <i>“gotta clean up... keep the cards shuffling... come back to do it tomorrow! Hope to see you again!”</i>");
 		output("\n\nShe hops down from the table and collects her clothing before meeting with security who guide her safely out, but not before she blows you a kiss. While you sit for a few minutes longer, a servant brings you your complimentary <i>Ruby Tether,</i> and you waste no time guzzling it down. Whether or not alcohol is conducive to recovery doesn’t matter, because that inveigling beverage gets you right out of the ditch you were in.");
-		output("\n\nYou fish through the effluence-coated table and collect your prize winnings too! # credits richer, you leave the game floor behind, still thinking about Roo. By the time you’re off, a new dealer has manned the rapidly cleaned table.");
+		output("\n\nYou fish through the effluence-coated table and collect your prize winnings too! Several credits richer, you leave the game floor behind, still thinking about Roo. By the time you’re off, a new dealer has manned the rapidly cleaned table.");
 		output("\n\nHe isn’t anywhere near as appealing as the kaithrit before him.");
 		processTime(15);
 		IncrementFlag("ROO_SEXED");

@@ -166,6 +166,7 @@
 		include "../includes/follower/ramis.as";
 		include "../includes/follower/shekka.as";
 		include "../includes/follower/siegwulfe.as";
+		include "../includes/follower/syri.as";
 		include "../includes/follower/yammi.as";
 		
 		//Sidequest shit
@@ -445,6 +446,7 @@
 		include "../includes/zhengShiStation/boredJumperExpanded.as";
 		include "../includes/zhengShiStation/boredJumperGangbangs.as";
 		include "../includes/zhengShiStation/boredJumperPregXpac.as";
+		include "../includes/zhengShiStation/coronaFlamer.as";
 		include "../includes/zhengShiStation/dane.as";
 		include "../includes/zhengShiStation/forgehound.as";
 		include "../includes/zhengShiStation/ldc_and_shock_hopper.as";
@@ -459,6 +461,7 @@
 		include "../includes/zhengShiStation/rozPowerGoo.as";
 		include "../includes/zhengShiStation/slyverenSlavebreaker.as";
 		include "../includes/zhengShiStation/spacewalk.as";
+		include "../includes/zhengShiStation/snekAndMaus.as";
 		include "../includes/zhengShiStation/tivf.as";
 		include "../includes/zhengShiStation/teyaalTheEngineer.as";
 		include "../includes/zhengShiStation/urbolg.as";
@@ -503,6 +506,7 @@
 		include "../includes/uveto/korgonneMaleHostile.as";
 		include "../includes/uveto/krym.as";
 		include "../includes/uveto/lund.as";
+		include "../includes/uveto/lureling.as";
 		include "../includes/uveto/majaTamedTamelings.as";
 		include "../includes/uveto/milodanFertilityPriestess.as";
 		include "../includes/uveto/milodanMaleHostile.as";
@@ -516,6 +520,7 @@
 		include "../includes/uveto/rhenworld.as";
 		include "../includes/uveto/rooms.as";
 		include "../includes/uveto/roomFunctions.as";
+		include "../includes/uveto/roxy.as";
 		include "../includes/uveto/shade.as";
 		include "../includes/uveto/stormguardMale.as";
 		include "../includes/uveto/subTuner.as";
@@ -640,7 +645,7 @@
 
 			trace("TiTS Constructor")
 
-			version = "0.7.275";
+			version = "0.7.279";
 
 			//temporary nonsense variables.
 			temp = 0;
@@ -1740,7 +1745,21 @@
 		{
 			return chars["LUCA"];
 		}
-
+	
+		public function get marion():Marion
+		{
+			return chars["MARION"];
+		}
+	
+		public function get lureling():Lureling
+		{
+			return chars["LURELING"];
+		}
+		public function get roxy():Roxy
+		{
+			return chars["ROXY"];
+		}
+		
 		public function testShipCombat():void
 		{
 			CombatManager.newSpaceCombat();

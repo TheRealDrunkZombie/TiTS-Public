@@ -25,6 +25,8 @@ public function TundraEncounterBonus():Boolean
 		choices[choices.length] = encounterAKorgonneFemaleHostile;
 		choices[choices.length] = korgMaleEncounter;
 		choices[choices.length] = korgMaleEncounter;
+		//Essyras/Lurelings
+		choices[choices.length] = marionEncounter;
 		if(stormguardMaleEncounterAvailabale()) 
 		{
 			choices[choices.length] = stormguardIntro;
@@ -62,6 +64,8 @@ public function GlacialRiftEncounterBonus():Boolean
 		choices[choices.length] = encounterAMilodan;
 		choices[choices.length] = encounterAMilodan;
 		choices[choices.length] = encounterAMilodan;
+		//Essyras/Lurelings
+		choices[choices.length] = marionEncounter;
 		//very low encounter rate korgs
 		if(rand(2) == 0)
 		{
@@ -656,7 +660,9 @@ public function uvetoFallToColdDamage():void
 		
 		output("\n\nGroggily, you open your eyes, long enough to see that you’re in the back of a vehicle, bumping along the snowy outskirts of the plains. Ice has formed on the windows, but you can just make out Irestead in the distance, growing closer by the moment. Glancing at the front of the vehicle, you see metal bars separating you from the driver’s cabin, and an old slug shotgun bolted to the cage. A pair of cute little chibi ausar tokens hang from the rear view mirror, both dressed in too-tight Peacekeeper blouses and pointing finger guns at you.");
 		
-		output("\n\n<i>“You’re awake!”</i> a woman’s voice says from the driver’s seat, drawing your attention to a head of blue hair and a pair of floppy canid ears peeking out of a Peacekeeper helmet.");
+		if(silly) output("\n\n<i>“Hey, you. You’re finally ");
+		else output("\n\n<i>“You're ");
+		output("awake!”</i> a woman’s voice says from the driver’s seat, drawing your attention to a head of blue hair and a pair of floppy canid ears peeking out of a Peacekeeper helmet.");
 		if (flags["UVETO_LUNA_RESCUES"] == undefined)
 		{
 			output(" <i>“What were you thinking, wandering around outside town without a heat belt. Lucky you I was around, or you’d have been dead for sure!”</i>");

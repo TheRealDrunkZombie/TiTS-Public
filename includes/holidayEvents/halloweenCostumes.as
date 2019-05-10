@@ -1368,7 +1368,6 @@ public function taurTFs(arg:int = 1):void
 	pc.removeStatusEffect("Genital Slit");
 	pc.removeStatusEffect("Uniball");
 	pc.removeBalls();
-	pc.ballSizeRaw = 3.4;
 	//Tallness boost to 6' if below.
 	if(pc.tallness < 72) pc.tallness = 72;
 	//Taurbody, ofcourse.
@@ -1543,7 +1542,7 @@ public function finalLadyTaurCostumeEpilogue():void
 	output(" centaur now.</b>");
 	pc.lust(50);
 	halloweenShipMove();
-	flags["TAURFUCKED_DANE"] = 1;
+	IncrementFlag("TAURFUCKED_DANE");
 	clearMenu();
 	addButton(0,"Next",mainGameMenu);
 }
